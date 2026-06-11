@@ -1,0 +1,30 @@
+name: Deploy to Render
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Lint with flake8
+        run: |
+          pip install flake8
+          flake8 . --max-line-length=120 --exclude=.venv,venv
+
+      - name: Trigger Render deploy
+        run: |
+          curl -X POST "${{ secrets.RENDER_DEPLOY_HOOK_URL }}"
