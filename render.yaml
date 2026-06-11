@@ -1,0 +1,29 @@
+services:
+  - type: web
+    name: ratewatch-ng
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: python bot.py
+    envVars:
+      - key: BOT_TOKEN
+        sync: false
+      - key: APPWRITE_ENDPOINT
+        sync: false
+      - key: APPWRITE_PROJECT_ID
+        sync: false
+      - key: APPWRITE_DATABASE_ID
+        sync: false
+      - key: APPWRITE_USERS_COLLECTION
+        sync: false
+      - key: APPWRITE_ALERTS_COLLECTION
+        sync: false
+      - key: APPWRITE_SUBSCRIPTIONS_COLLECTION
+        sync: false
+      - key: APPWRITE_REFERRALS_COLLECTION
+        sync: false
+      - key: APPWRITE_API_KEY
+        sync: false
+      - key: ADMIN_TELEGRAM_ID
+        sync: false
+    healthCheckPath: /webhook
