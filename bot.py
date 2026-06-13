@@ -89,13 +89,14 @@ async def main() -> None:
     # Webhook
     hostname = os.environ.get("RENDER_EXTERNAL_HOSTNAME", "")
     webhook_url = f"https://{hostname}/webhook"
-    logger.info("RateWatch NG starting — webhook: %s", webhook_url)
+    port = int(os.environ.get("PORT", 8000))
+    logger.info("RateWatch NG starting — webhook: %s (port %s)", webhook_url, port)
 
     async with app:
         await app.start()
         await app.updater.start_webhook(
             listen="0.0.0.0",
-            port=8000,
+            port=port,
             url_path="/webhook",
             webhook_url=webhook_url,
             drop_pending_updates=True,
@@ -106,3 +107,4 @@ async def main() -> None:
 
 if __name__ == "__main__":
     asyncio.run(main())
+    
