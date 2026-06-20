@@ -15,7 +15,7 @@ COINGECKO_URL = (
     "?ids=tether,bitcoin&vs_currencies=ngn"
 )
 
-_CACHE_TTL_SECONDS = 45
+_CACHE_TTL_SECONDS = 90
 _cache: dict = {"data": None, "ts": 0}
 
 
