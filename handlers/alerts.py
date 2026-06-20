@@ -161,7 +161,17 @@ async def confirm_remove_alert(update: Update, context: ContextTypes.DEFAULT_TYP
         return ENTERING_TARGET
 
     # Save alert
-    create_alert(tg_id, asset, condition, target)
+    try:
+        create_alert(tg_id, asset, condition, target)
+    except Exception as e:
+        logger.error(f"Failed to create alert: {e}")
+        await update.message.reply_text(
+            "❌ Something went wrong saving your alert. Please try again, "
+            "or contact support if this keeps happening.",
+            reply_markup=alert_created_keyboard(),
+        )
+        context.user_data.clear()
+        return ConversationHandler.END
 
     label = fmt_asset_label(asset)
     symbol = ">" if condition in ("above", "pct_up") else "<"
@@ -249,4 +259,4 @@ async def remove_alert_handler(update: Update, context: ContextTypes.DEFAULT_TYP
         query,
         "Select alert to delete:",
         reply_markup=remove_alert_keyboard(alerts),
-    )
+)
