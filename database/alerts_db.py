@@ -5,7 +5,6 @@ from appwrite.id import ID
 from database.client import db
 from utils.config import APPWRITE_DATABASE_ID, APPWRITE_ALERTS_COLLECTION
 
-
 logger = logging.getLogger(__name__)
 
 COL = APPWRITE_ALERTS_COLLECTION
