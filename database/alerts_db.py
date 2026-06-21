@@ -1,8 +1,11 @@
+import logging
 from datetime import datetime, timezone
 from appwrite.query import Query
 from appwrite.id import ID
 from database.client import db
 from utils.config import APPWRITE_DATABASE_ID, APPWRITE_ALERTS_COLLECTION
+
+logger = logging.getLogger(__name__)
 
 COL = APPWRITE_ALERTS_COLLECTION
 DB = APPWRITE_DATABASE_ID
@@ -19,7 +22,12 @@ def get_user_alerts(telegram_id: int) -> list[dict]:
             Query.limit(50),
         ])
         return res.get("documents", [])
-    except Exception:
+    except Exception as e:
+        # Log the real reason instead of silently returning an empty list —
+        # an empty list here is indistinguishable from "no alerts" to the user,
+        # which previously hid real Appwrite errors (e.g. missing index,
+        # type mismatch on telegram_id) as a false "no alerts" screen.
+        logger.error(f"get_user_alerts failed for {telegram_id}: {e}")
         return []
 
 
@@ -30,7 +38,8 @@ def get_all_active_alerts() -> list[dict]:
             Query.limit(500),
         ])
         return res.get("documents", [])
-    except Exception:
+    except Exception as e:
+        logger.error(f"get_all_active_alerts failed: {e}")
         return []
 
 
@@ -55,3 +64,4 @@ def deactivate_alert(document_id: str) -> None:
 
 def count_user_alerts(telegram_id: int) -> int:
     return len(get_user_alerts(telegram_id))
+        
