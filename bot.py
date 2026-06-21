@@ -6,7 +6,7 @@ from telegram.ext import (
     Application, CommandHandler, CallbackQueryHandler,
     MessageHandler, ConversationHandler, filters, ContextTypes
 )
-from handlers.start import start_handler, help_handler
+from handlers.start import start_handler, main_menu_handler, help_handler
 from handlers.alerts import (
     new_alert_asset, new_alert_condition, new_alert_target,
     my_alerts_handler, remove_alert_handler, confirm_remove_alert,
@@ -50,7 +50,7 @@ async def main() -> None:
                 MessageHandler(filters.TEXT & ~filters.COMMAND, confirm_remove_alert)
             ],
         },
-        fallbacks=[CallbackQueryHandler(start_handler, pattern="^home$")],
+        fallbacks=[CallbackQueryHandler(main_menu_handler, pattern="^home$")],
         per_message=False,
         per_chat=True,
     )
@@ -66,7 +66,7 @@ async def main() -> None:
     app.add_handler(alert_conv)
 
     # Callback queries
-    app.add_handler(CallbackQueryHandler(start_handler, pattern="^home$"))
+    app.add_handler(CallbackQueryHandler(main_menu_handler, pattern="^home$"))
     app.add_handler(CallbackQueryHandler(my_alerts_handler, pattern="^my_alerts$"))
     app.add_handler(CallbackQueryHandler(remove_alert_handler, pattern="^remove_alert$"))
     app.add_handler(CallbackQueryHandler(remove_alert_handler, pattern="^delete_alert_"))
